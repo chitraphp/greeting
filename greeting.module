@@ -1,0 +1,54 @@
+<?php
+function greeting_menu() {
+    $items = array();
+    $items['hello_friend'] = array();
+    $items['hello_friend']['friendo'] = array(
+        'title' =>"Hello Friend!",
+        'page callback' => 'say_hello',
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['farewell'] = array(
+        'title' =>"Farewell Friend!",
+        'page callback' => 'say_farewell',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    $items['non_greet'] = array(
+        'title' => 'Nope',
+        'page callback' => 'non_greeting',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+
+    return $items;
+}
+
+function say_hello() {
+    return "<p>Hello my dear friend</p>";
+}
+function say_farewell() {
+    return '<p>Farewell my dear friend</p>';
+}
+
+function non_greeting() {
+    return '<h1>This is not a greeting! :P</h1>';
+}
+
+function greeting_user_login() {
+    $_GET['destination'] = 'hello_friend';
+}
+ function greeting_user_logout() {
+     $_GET['destination'] = 'farewell';
+ }
+
+function greeting_page_build(&$page) {
+    if (menu_get_object('node', 1)) {
+        $page['content']['#sorted'] = FALSE;
+
+        $page['content']['disclaimer'] = array(
+            '#markup' => t(non_greeting()),
+            '#weight' => 0,
+        );
+    }
+}
